@@ -1,13 +1,5 @@
 <?php
 
-/* Descrizione
-
-
-
-Aggiungere un secondo campo al form che permetta di filtrare gli hotel per voto (es. inserisco 3 ed ottengo tutti gli hotel che hanno un voto di tre stelle o superiore)
-NOTA: deve essere possibile utilizzare entrambi i filtri contemporaneamente (es. ottenere una lista con hotel che dispongono di parcheggio e che hanno un voto di tre stelle o superiore)
-Se non viene specificato nessun filtro, visualizzare come in precedenza tutti gli hotel. */
-
 
 $hotels = [
 
@@ -55,9 +47,7 @@ if (isset($_GET['parking'])) {
     $array = checkHotelWithParking( $_GET['parking'], $_GET['rate'], $hotels);
 }
 
-
-function checkHotelWithParking($park, $rate, $hotels)
-{
+function checkHotelWithParking($park, $rate, $hotels){
     
     $newArray = [];
     if ($park == 'si') {
@@ -72,9 +62,6 @@ function checkHotelWithParking($park, $rate, $hotels)
     }
     return $newArray;
 }
-
-
-
 
 ?>
 
@@ -92,9 +79,8 @@ function checkHotelWithParking($park, $rate, $hotels)
 
 <body>
 
-
     <div class="container d-flex flex-column align-items-center justify-content-center pt-5">
-        <?php if (empty($_GET['parking']) || empty($_GET['rate'])) : ?>
+        <?php if (empty($_GET['parking'])) : ?>
             <h4>selezionare opzione parcheggio</h4>
         <?php endif ?>
         <form action="index.php" method="get" class="my-5 d-flex flex-column align-items-center">
@@ -117,9 +103,6 @@ function checkHotelWithParking($park, $rate, $hotels)
             </div>
 
         </form>
-
-
-
         <table>
             <thead>
                 <tr>
