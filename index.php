@@ -3,8 +3,7 @@
 /* Descrizione
 
 
-Bonus: 1
-Aggiungere un form ad inizio pagina che tramite una richiesta GET permetta di filtrare gli hotel che hanno un parcheggio.
+
 Aggiungere un secondo campo al form che permetta di filtrare gli hotel per voto (es. inserisco 3 ed ottengo tutti gli hotel che hanno un voto di tre stelle o superiore)
 NOTA: deve essere possibile utilizzare entrambi i filtri contemporaneamente (es. ottenere una lista con hotel che dispongono di parcheggio e che hanno un voto di tre stelle o superiore)
 Se non viene specificato nessun filtro, visualizzare come in precedenza tutti gli hotel. */
@@ -52,20 +51,22 @@ $hotels = [
 
 $array = $hotels;
 
-if (isset($_GET['parking'] )){
-    $array = checkHotelWithParking($_GET['parking'], $hotels); 
+if (isset($_GET['parking'])) {
+    $array = checkHotelWithParking( $_GET['parking'], $_GET['rate'], $hotels);
 }
 
 
-function checkHotelWithParking($input, $hotels){
+function checkHotelWithParking($park, $rate, $hotels)
+{
+    
     $newArray = [];
-    if ($input == 'si') {
-        $input = true;
+    if ($park == 'si') {
+        $park = true;
     } else {
-        $input = false;
+        $park = false;
     }
     foreach ($hotels as $hotel) {
-        if ($hotel['parking'] == $input) {
+        if ($hotel['parking'] == $park && $hotel['vote'] >= $rate) {
             array_push($newArray, $hotel);
         }
     }
@@ -93,7 +94,7 @@ function checkHotelWithParking($input, $hotels){
 
 
     <div class="container d-flex flex-column align-items-center justify-content-center pt-5">
-        <?php if (empty($_GET['parking'])) : ?>
+        <?php if (empty($_GET['parking']) || empty($_GET['rate'])) : ?>
             <h4>selezionare opzione parcheggio</h4>
         <?php endif ?>
         <form action="index.php" method="get" class="my-5 d-flex flex-column align-items-center">
@@ -105,7 +106,15 @@ function checkHotelWithParking($input, $hotels){
                     <option value="no">Parking NO</option>
                 </select>
             </div>
+            <div class="mb-3 d-flex align-items-center ">
+                <label for="rate" class="form-label mb-0">Rate</label>
+                <input type="range"  class="mx-2" name="rate" id="rate" value="1" min="1" max="5" oninput="this.nextElementSibling.value = this.value">
+                <output>1</output>
+            </div>
+            <div class="button d-flex gap-3">
             <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="reset" class="btn btn-danger">Reset</button>
+            </div>
 
         </form>
 
