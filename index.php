@@ -41,10 +41,10 @@ $hotels = [
 
 ];
 
-$array = $hotels;
+
 
 if (isset($_GET['parking'])) {
-    $array = checkHotelWithParking( $_GET['parking'], $_GET['rate'], $hotels);
+    $hotels = checkHotelWithParking( $_GET['parking'], $_GET['rate'], $hotels);
 }
 
 function checkHotelWithParking($park, $rate, $hotels){
@@ -113,7 +113,7 @@ function checkHotelWithParking($park, $rate, $hotels){
             </thead>
             <tbody>
                 <?php
-                foreach ($array as $key => $hotel) { ?>
+                foreach ($hotels as $key => $hotel) { ?>
                     <tr>
                         <?php foreach ($hotel as $key => $element) { ?>
                             <?php if ($key == 'parking' && $element == true) {
