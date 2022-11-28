@@ -2,13 +2,13 @@
 
 /* Descrizione
 
-Stampare tutti i nostri hotel con tutti i dati disponibili.
-Dopo aggiungete Bootstrap e mostrate le informazioni con una tabella.
+
 Bonus: 1
 Aggiungere un form ad inizio pagina che tramite una richiesta GET permetta di filtrare gli hotel che hanno un parcheggio.
 Aggiungere un secondo campo al form che permetta di filtrare gli hotel per voto (es. inserisco 3 ed ottengo tutti gli hotel che hanno un voto di tre stelle o superiore)
 NOTA: deve essere possibile utilizzare entrambi i filtri contemporaneamente (es. ottenere una lista con hotel che dispongono di parcheggio e che hanno un voto di tre stelle o superiore)
 Se non viene specificato nessun filtro, visualizzare come in precedenza tutti gli hotel. */
+
 
 $hotels = [
 
@@ -50,6 +50,31 @@ $hotels = [
 
 ];
 
+$array = $hotels;
+
+if (isset($_GET['parking'] )){
+    $array = checkHotelWithParking($_GET['parking'], $hotels); 
+}
+
+
+function checkHotelWithParking($input, $hotels){
+    $newArray = [];
+    if ($input == 'si') {
+        $input = true;
+    } else {
+        $input = false;
+    }
+    foreach ($hotels as $hotel) {
+        if ($hotel['parking'] == $input) {
+            array_push($newArray, $hotel);
+        }
+    }
+    return $newArray;
+}
+
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -66,36 +91,52 @@ $hotels = [
 
 <body>
 
-    <table>
-        <thead>
-            <tr>
-                <?php foreach ($hotels[0] as $key => $hotel) { ?>
-                    <td class="p-2"> <?= $key ?> </td>
-                <?php } ?>
-            </tr>
-        </thead>
 
-        <tbody>
-            <?php foreach ($hotels as $key => $hotel) { ?>
+    <div class="container d-flex flex-column align-items-center justify-content-center pt-5">
+        <?php if (empty($_GET['parking'])) : ?>
+            <h4>selezionare opzione parcheggio</h4>
+        <?php endif ?>
+        <form action="index.php" method="get" class="my-5 d-flex flex-column align-items-center">
+            <div class="mb-3">
+                <label for="parking" class="form-label">Parking</label>
+                <select class="form-select form-select-lg" name="parking" id="parking">
+                    <option selected disabled='disabled'>Tutti</option>
+                    <option value="si">Parking SI</option>
+                    <option value="no">Parking NO</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+
+        </form>
+
+
+
+        <table>
+            <thead>
                 <tr>
-                    <?php foreach ($hotel as $key => $element) { ?>
-                        <?php if ( $key =='parking' && $element == true) {
-                            $element = 'si';
-                        } elseif ($key =='parking' && $element == false) {
-                            $element = 'no';
-                        }
-                        ?>
-                        <td class="p-2"> <?= $element ?> </td>
+                    <?php foreach ($hotels[0] as $key => $hotel) { ?>
+                        <th class="p-3"> <?= $key ?> </th>
                     <?php } ?>
                 </tr>
-            <?php } ?>
-        </tbody>
-
-
-
-
-
-    </table>
+            </thead>
+            <tbody>
+                <?php
+                foreach ($array as $key => $hotel) { ?>
+                    <tr>
+                        <?php foreach ($hotel as $key => $element) { ?>
+                            <?php if ($key == 'parking' && $element == true) {
+                                $element = 'si';
+                            } elseif ($key == 'parking' && $element == false) {
+                                $element = 'no';
+                            }
+                            ?>
+                            <td class="p-3"> <?= $element ?> </td>
+                        <?php } ?>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
 </body>
 
 </html>
